@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WindySync: bir Windows PC'yi yeni bir PC'ye uçtan uca şifreli taşı</title>
+<meta name="description" content="WindySync bir Windows PC'nin kurulumunu diğerine taşır: editör ayarları, SSH ve GnuPG anahtarları, PowerShell profili, yer imleri, klasörlerin ve winget ile Scoop'un kurduklarının listeleri. PC'den PC'ye, uçtan uca şifreli; kurulumu yapay zekâ ajanın için yazılan bir not bitirir.">
+<link rel="canonical" href="https://windysync.vercel.app/tr/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WindySync">
+<meta property="og:url" content="https://windysync.vercel.app/tr/">
+<meta property="og:title" content="WindySync: bir Windows PC'yi yeni bir PC'ye uçtan uca şifreli taşı">
+<meta property="og:description" content="WindySync bir Windows PC'nin kurulumunu diğerine taşır: editör ayarları, SSH ve GnuPG anahtarları, PowerShell profili, yer imleri, klasörlerin ve winget ile Scoop'un kurduklarının listeleri. PC'den PC'ye, uçtan uca şifreli; kurulumu yapay zekâ ajanın için yazılan bir not bitirir.">
+<meta property="og:image" content="https://windysync.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WindySync: bir Windows PC'yi yeni bir PC'ye uçtan uca şifreli taşı">
+<meta name="twitter:description" content="WindySync bir Windows PC'nin kurulumunu diğerine taşır: editör ayarları, SSH ve GnuPG anahtarları, PowerShell profili, yer imleri, klasörlerin ve winget ile Scoop'un kurduklarının listeleri. PC'den PC'ye, uçtan uca şifreli; kurulumu yapay zekâ ajanın için yazılan bir not bitirir.">
+<meta name="twitter:image" content="https://windysync.vercel.app/og.png">
+<meta name="theme-color" content="#0b1517">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "WindySync", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Windows", "url": "https://windysync.vercel.app/", "downloadUrl": "https://github.com/Ege-BULUT/WindySync/releases/latest", "softwareVersion": "0.1.0", "license": "https://opensource.org/licenses/MIT", "image": "https://windysync.vercel.app/og.png", "description": "WindySync bir Windows PC'nin kurulumunu diğerine taşır: editör ayarları, SSH ve GnuPG anahtarları, PowerShell profili, yer imleri, klasörlerin ve winget ile Scoop'un kurduklarının listeleri. PC'den PC'ye, uçtan uca şifreli; kurulumu yapay zekâ ajanın için yazılan bir not bitirir.", "author": {"@type": "Person", "name": "Ege BULUT", "url": "https://github.com/Ege-BULUT"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}</script>
+<link rel="alternate" hreflang="en" href="https://windysync.vercel.app/">
+<link rel="alternate" hreflang="tr" href="https://windysync.vercel.app/tr/">
+<link rel="alternate" hreflang="x-default" href="https://windysync.vercel.app/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1517'/%3E%3Cpath d='M5 13H20C25 13 26 7 22 6.5C19 6 18 10 21 10.5' fill='none' stroke='%2367e8f9' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M5 21H25' stroke='%23ecfeff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="./"><span>Windy<b>~</b>Sync</span> <small>WYSY</small></a>
+    <div class="links">
+      <a href="#how" class="opt">Nasıl çalışır</a>
+      <a href="features/">Özellikler</a>
+      <a href="docs/">Belgeler</a>
+      <a href="changelog/" class="opt">Değişiklikler</a>
+      <a href="#family" class="opt">Aile</a>
+      <a href="download/">İndir</a>
+    </div>
+    <a class="btn lang" id="lang" href="../" hreflang="en" aria-label="English">EN</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <svg class="bg" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g class="w-band"><path class="wo" d="M -80 170 H 860"/><path class="wo" d="M 380 390 H 1520"/><path class="wo" d="M -80 610 H 1040"/><path class="wf" d="M -80 170 H 860"/><path class="wf" d="M 380 390 H 1520"/><path class="wf" d="M -80 610 H 1040"/></g>
+    <path class="wl base" d="M -40 170 H 760 C 850 170 890 118 858 82 C 830 52 784 70 790 104 C 795 130 826 134 838 118"/><path class="wl base" d="M 440 390 H 1290 C 1380 390 1420 338 1388 302 C 1360 272 1314 290 1320 324 C 1325 350 1356 354 1368 338"/><path class="wl base" d="M -40 610 H 930 C 1020 610 1060 558 1028 522 C 1000 492 954 510 960 544 C 965 570 996 574 1008 558"/>
+    <path class="wl a" d="M -40 170 H 760 C 850 170 890 118 858 82 C 830 52 784 70 790 104 C 795 130 826 134 838 118"/><path class="wl b" d="M 440 390 H 1290 C 1380 390 1420 338 1388 302 C 1360 272 1314 290 1320 324 C 1325 350 1356 354 1368 338"/><path class="wl c" d="M -40 610 H 930 C 1020 610 1060 558 1028 522 C 1000 492 954 510 960 544 C 965 570 996 574 1008 558"/>
+    <path class="wl d" d="M -40 300 H 520 C 560 300 574 280 560 268"/><path class="wl d" style="animation-delay:-1.7s" d="M 620 500 H 1180 C 1220 500 1234 480 1220 468"/>
+  </svg>
+  <div class="wrap hero-grid">
+    <div>
+      <img class="logo" src="../logo.svg" alt="WYSY, WindySync logo">
+      <h1>Yeni PC'n,&nbsp;<em>zaten senin.</em></h1>
+      <p class="lead">Windy~Sync bir Windows PC'nin kurulumunu diğerine taşır: editör ayarları, SSH ve GnuPG anahtarları, PowerShell profili, yer imleri, klasörlerin ve winget ile Scoop'un kurduklarının listeleri. Dosyalar doğrudan PC'den PC'ye, uçtan uca şifreli gider; bir not da yapay zekâ ajanına geriye ne kaldığını söyler.</p>
+      <div class="cta">
+        <a class="btn red" href="download/">İndir</a>
+        <a class="btn" href="#how">Nasıl çalışır</a>
+      </div>
+      <div class="ticker"><span>WindY.<b>SYnc</b></span><span>PC ⇄ PC</span><span>Rust &amp; Rune ile yazıldı</span><span>MIT</span></div>
+    </div>
+    <div class="shot"><img src="../sending.png" width="2560" height="1560" alt="WindySync penceresi: soldaki bu PC, sağdaki yeni PC'ye gönderiyor"></div>
+  </div>
+</header>
+
+<svg class="divider" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 44 H 1220 C 1290 44 1318 18 1296 8 C 1280 2 1262 14 1274 26"/><path class="run" style="animation-delay:-0s" d="M0 44 H 1220 C 1290 44 1318 18 1296 8 C 1280 2 1262 14 1274 26"/><path d="M120 58 H 860 C 900 58 912 46 900 40"/><path class="run" style="animation-delay:-2s" d="M120 58 H 860 C 900 58 912 46 900 40"/></svg>
+
+<section id="how">
+  <div class="wrap">
+    <span class="caps">Nasıl çalışır</span>
+    <h2>GitHub tanıştırır, <em>cihazlar doğrudan konuşur</em></h2>
+    <p class="sub">PC'lerin senin özel bir GitHub deponda buluşur. Dosyalar oraya hiç gitmez: bir PC'den diğerine gider.</p>
+
+    <div class="stage reveal">
+      <div class="stage-head"><span class="caps">01</span><h3>Her PC gönderir, her PC alır</h3><p>Bir uzak masaüstü uygulaması gibi: diğer PC'yi seç, sonra gönder ya da al. Yalnızca o aktarım için geçerli.</p></div>
+      <svg viewBox="0 0 1100 380" role="img" aria-label="İki Windows PC özel bir GitHub deposunda buluşur ve dosyaları birbirine doğrudan gönderir">
+        <defs><linearGradient id="wireGrad" x1="0" x2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#ecfeff"/></linearGradient></defs>
+        <path id="c1" class="wire" d="M 150 230 C 150 150 300 100 400 100"/>
+        <path id="c2" class="wire" d="M 700 100 C 800 100 950 150 950 230"/>
+        <path class="wire hot" d="M 150 230 C 150 150 300 100 400 100"/>
+        <path class="wire hot" style="animation-delay:-.6s" d="M 700 100 C 800 100 950 150 950 230"/>
+        <path id="dw" class="wire" d="M 265 300 C 420 300 450 340 550 340 S 690 300 835 300"/>
+        <path class="wire hot" style="stroke-width:4" d="M 265 300 C 420 300 450 340 550 340 S 690 300 835 300"/>
+        <g class="node repo" transform="translate(400 20)">
+          <rect width="300" height="170" rx="20"/>
+          <text class="t" x="22" y="38">you / windysync-bus</text>
+          <text class="s" x="22" y="60">Özel depo: buluşma noktası</text>
+          <text class="folder on" x="22" y="98">▸ devices/</text>
+          <text class="folder on" style="animation-delay:1s" x="22" y="124">▸ requests/</text>
+          <text class="folder on" style="animation-delay:2s" x="22" y="150">▸ transfers/</text>
+        </g>
+        <g class="node" transform="translate(35 240)"><rect width="230" height="100" rx="16"/><rect class="scr" x="14" y="14" width="44" height="30" rx="3"/><path class="ink" d="M36 44 V52 M26 53 H46"/><text class="t" x="72" y="38">Eski PC</text><text class="s" x="72" y="60">Windows #7f3a2c91</text><text class="s" x="72" y="82" fill="#67e8f9">gönderir</text></g>
+        <g class="node" transform="translate(835 240)"><rect width="230" height="100" rx="16"/><rect class="scr" x="16" y="18" width="40" height="27" rx="4"/><path class="ink" d="M10 50 H62"/><text class="t" x="72" y="38">Yeni laptop</text><text class="s" x="72" y="60">Windows #c04e19b7</text><text class="s" x="72" y="82" fill="#5eead4">alır</text></g>
+        <text class="s" x="30" y="112" style="font:500 12px var(--mono);fill:var(--muted)">kimlikler, istekler, mühürlü anahtarlar</text>
+        <text class="s" x="550" y="372" text-anchor="middle" style="font:500 12px var(--mono);fill:var(--muted)">dosyalar: PC'den PC'ye, uçtan uca şifreli</text>
+        <circle class="pkt v" r="5"><animateMotion dur="3s" repeatCount="indefinite"><mpath href="#c1"/></animateMotion></circle>
+        <circle class="pkt v" r="5"><animateMotion dur="3s" begin="1.5s" repeatCount="indefinite"><mpath href="#c2"/></animateMotion></circle>
+        <circle class="pkt" r="7"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#dw"/></animateMotion></circle>
+        <circle class="pkt" r="7"><animateMotion dur="2.4s" begin=".8s" repeatCount="indefinite"><mpath href="#dw"/></animateMotion></circle>
+        <circle class="pkt" r="7"><animateMotion dur="2.4s" begin="1.6s" repeatCount="indefinite"><mpath href="#dw"/></animateMotion></circle>
+      </svg>
+    </div>
+
+    <div class="stage reveal">
+      <div class="stage-head"><span class="caps">02</span><h3>Bir PC'den diğerine</h3></div>
+      <div class="steps">
+        <div class="rail" aria-hidden="true"><svg viewBox="0 0 1000 30" preserveAspectRatio="none"><path d="M0 15 H 950 C 985 15 1000 4 985 1" fill="none" stroke="var(--edge)" stroke-width="2"/><circle r="6" fill="var(--red2)"><animateMotion dur="10s" repeatCount="indefinite" path="M0 15 H 950 C 985 15 1000 4 985 1"/></circle></svg></div>
+        <div class="step"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></div><span class="n">01</span><h4>Bul</h4><p>Hesabındaki PC'ler masaüstü ve laptop olarak çıkar. Birine tıkla, seç.</p></div>
+        <div class="step"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 8h15l-4-4M20 16H5l4 4"/></svg></div><span class="n">02</span><h4>İste</h4><p>Göndermeyi ya da almayı seç. Diğer cihaz sahibinden onay ister.</p></div>
+        <div class="step"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div><span class="n">03</span><h4>Seç</h4><p>Gönderen elindekini bir ağaç olarak sunar; yeni PC'nin alacaklarını sen işaretlersin.</p></div>
+        <div class="step"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 6h10l6 6-6 6H4z"/></svg></div><span class="n">04</span><h4>Taşı</h4><p>Yalnızca seçilenler gider, doğrudan ve şifreli. Bağlantı koparsa eksik kalanlar yeniden istenir.</p></div>
+        <div class="step"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5L18 18M6 18l2.5-2.5M15.5 8.5L18 6"/></svg></div><span class="n">05</span><h4>Bitir</h4><p>Her öğe yerine iner; GOAL.md de yapay zekâ ajanına geriye ne kaldığını söyler.</p></div>
+      </div>
+    </div>
+
+    <div class="stage reveal">
+      <div class="stage-head"><span class="caps">03</span><h3>Windows'un tuttuğu yere iner</h3><p>Her öğe, yeni PC'nin kendi kullanıcı klasörleri altındaki yerini bilir; oradaki kullanıcının adı ne olursa olsun.</p></div>
+      <div class="land"><table>
+        <thead><tr><th>Öğe</th><th>İndiği yer</th><th>Sonra</th></tr></thead>
+        <tbody>
+        <tr><td>VS Code ayarları</td><td><code>%APPDATA%\Code\User</code></td><td>eklentiler listeden yeniden kurulur</td></tr>
+        <tr><td>PowerShell profili</td><td><code>%USERPROFILE%\Documents\PowerShell</code></td><td>olduğu gibi yerleşir</td></tr>
+        <tr><td>GnuPG</td><td><code>%APPDATA%\gnupg</code></td><td>olduğu gibi yerleşir</td></tr>
+        <tr><td>Edge yer imleri</td><td><code>%LOCALAPPDATA%\Microsoft\Edge\User Data\Default</code></td><td>yerleşmeden önce Edge kapatılır</td></tr>
+        <tr><td>winget paketleri</td><td><code>lists\winget.txt</code></td><td>ajanın <code>winget import</code> çalıştırır</td></tr>
+        </tbody></table></div>
+      <p class="note">Orada zaten olan ne varsa yanında <code>.before-windysync</code> olarak saklanır. Kullanıcı klasörünün yeni PC'de başka bir adı varsa (<code>C:\Users\ege</code> yerine <code>C:\Users\ege.b</code>), not hâlâ eskisini anan ayarları listeler.</p>
+    </div>
+    <a class="more" href="docs/">Belgeleri oku →</a>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <span class="caps">Özellikler</span>
+    <h2>Taşınmayı zahmetsiz yapanlar</h2>
+    <p class="sub">İki PC'de de aynı küçük uygulama.</p>
+    <div class="grid">
+      <div class="card reveal"><span class="k">EITHER WAY</span><h3>Her seferinde gönder ya da al</h3><p>Sabit bir gönderen yok. İki PC'den biri ötekine gönderir ya da ondan alır, aktarım başına seçilir.</p></div>
+      <div class="card reveal"><span class="k">WINDOWS PATHS</span><h3>Windows'un tuttuğu yere iner</h3><p>%APPDATA%, %LOCALAPPDATA% ve Belgeler her PC'de ayrı okunur; yeni bir kullanıcı adı hiçbir şeyi değiştirmez.</p></div>
+      <div class="card reveal"><span class="k">PICK</span><h3>İşaretlediğin bir ağaç</h3><p>Önce gruplar, sonra öğeler. Bir grubu işaretlemek içindeki her şeyi işaretler ve yalnızca işaretliler gider.</p></div>
+      <div class="card reveal"><span class="k">DIRECT</span><h3>Buluttan değil, PC'den PC'ye</h3><p>Dosyalar ağın üzerinden gider. GitHub yalnızca kimin kim olduğunu ve mühürlü anahtarları taşır.</p></div>
+      <div class="card reveal"><span class="k">SEALED</span><h3>Uçtan uca şifreli</h3><p>Teklifler, seçimler ve anahtarlar her PC'nin kendi anahtarına mühürlenir; dosyalar XChaCha20-Poly1305 ile akar.</p></div>
+      <div class="card reveal"><span class="k">BRIEF</span><h3>İşi ajanın bitirir</h3><p>GOAL.md neyin nereye indiğini söyler ve kurulum için winget ile Scoop listelerini verir.</p></div>
+    </div>
+    <a class="more" href="features/">Tüm özellikler →</a>
+  </div>
+</section>
+
+<section id="screens">
+  <div class="wrap">
+    <span class="caps">Uygulama</span>
+    <h2><em>Windy~Sync</em> penceresi</h2>
+    <p class="sub">Bu PC hep solda, diğeri sağda; çizgiler gönderenden alana akar.</p>
+    <div class="gallery">
+      <figure class="reveal"><img src="../find.png" width="2560" height="1560" alt="01 · Bu hesaptaki PC'ler" loading="lazy"><figcaption>01 · Bu hesaptaki PC'ler</figcaption></figure>
+      <figure class="reveal"><img src="../hover-send.png" width="2560" height="1560" alt="02 · Gönder ya da al, bu aktarım için" loading="lazy"><figcaption>02 · Gönder ya da al, bu aktarım için</figcaption></figure>
+      <figure class="reveal"><img src="../request.png" width="2560" height="1560" alt="03 · Diğer PC onaylar" loading="lazy"><figcaption>03 · Diğer PC onaylar</figcaption></figure>
+      <figure class="reveal"><img src="../pick.png" width="2560" height="1560" alt="04 · Yeni PC'nin alacaklarını seç" loading="lazy"><figcaption>04 · Yeni PC'nin alacaklarını seç</figcaption></figure>
+      <figure class="reveal"><img src="../sending.png" width="2560" height="1560" alt="Gönderiliyor: çizgiler alana doğru akar" loading="lazy"><figcaption>Gönderiliyor: çizgiler alana doğru akar</figcaption></figure>
+      <figure class="reveal"><img src="../done.png" width="2560" height="1560" alt="Bitti: not ajanın için hazır" loading="lazy"><figcaption>Bitti: not ajanın için hazır</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="moves">
+  <div class="wrap">
+    <span class="caps">Taşınırken</span>
+    <h2>Neler taşınır, <em>neler kalır</em></h2>
+    <p class="sub">WindySync bir PC'yi senin yapan ayarları ve dosyaları taşır, temiz bir başlangıca bıraktıklarını da açıkça söyler.</p>
+    <div class="cols">
+      <div class="box yes reveal">
+        <h3>Taşınanlar</h3>
+        <ul>
+          <li><strong>Dosyalar:</strong> Masaüstü, Belgeler, İndirilenler, Resimler, Müzik ve Videolar; her üst öğe ayrı seçilir. <code>node_modules</code>, <code>target</code>, <code>.venv</code> gibi kaynaktan yeniden kurulan klasörler geride kalır.</li>
+          <li><strong>Kabuk ve git:</strong> git ayarı, SSH ve GnuPG anahtarları, PowerShell profili.</li>
+          <li><strong>Editörler ve terminaller:</strong> VS Code, Cursor, Zed, Wave.</li>
+          <li><strong>Notlar, tarayıcılar, yapay zekâ araçları:</strong> Obsidian kasa listesi, Edge, Chrome, Brave ve Chromium yer imleri, Claude Code, Codex.</li>
+          <li><strong>Kurulu araçların listeleri:</strong> winget, Scoop, npm, cargo, pipx, VS Code ve Cursor eklentileri.</li>
+        </ul>
+      </div>
+      <div class="box no reveal">
+        <h3>Kalanlar, ve nedeni</h3>
+        <ul>
+          <li><strong>Programların kendisi:</strong> kopyalanmaz, winget ve Scoop listelerinden yeniden kurulur.</li>
+          <li><strong>Tarayıcıda kayıtlı şifreler:</strong> Windows onları eski PC'nin hesabı için DPAPI ile mühürler. Tarayıcının kendi eşitlemesini ya da şifre dışa aktarmasını kullan.</li>
+          <li><strong>Windows ayarları, kayıt defteri ve PC'nin kimliği:</strong> Tailscale düğümü, uzak masaüstü kimlikleri gibi.</li>
+          <li><strong>Girişler:</strong> yapay zekâ araçlarına ve uygulamalara yeni PC'de yeniden giriş yapılır.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="layout">
+  <div class="wrap split">
+    <div>
+      <span class="caps">Depoda</span>
+      <h2>GitHub'da yalnızca tanışma durur.</h2>
+      <pre class="tree"><span class="r">sen/windysync-bus/</span>           <span class="c"># özel</span>
+├── devices/
+│   ├── 7f3a2c91.json    <span class="c"># ad, sistem, görünüm, açık anahtar</span>
+│   └── c04e19b7.json
+├── requests/            <span class="c"># gönder ya da al, onay bekler</span>
+└── transfers/
+    └── 20261126-1605_7f3a2c91_c04e19b7/
+        ├── session.json <span class="c"># ilerleme</span>
+        ├── offer.sealed <span class="c"># gönderenin sundukları</span>
+        ├── picks.sealed <span class="c"># alanın seçtikleri</span>
+        └── key.sealed   <span class="c"># akış anahtarı ve adres</span></pre>
+    </div>
+    <div class="box reveal" style="margin-top:58px">
+      <h3>GitHub'a asla gitmeyenler</h3>
+      <ul>
+        <li>Dosyaların: PC'den PC'ye giderler</li>
+        <li>Taşıdıkların hakkında okunabilir hiçbir şey: teklifler ve seçimler mühürlü</li>
+        <li>GitHub girişin: WindySync onu her seferinde GitHub CLI'dan ister</li>
+        <li>İşaretlemediğin her şey</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="family">
+  <div class="wrap">
+    <span class="caps">Aile</span>
+    <h2>Tek aile, <em>her türlü taşıma</em></h2>
+    <p class="sub">Aynı yapımcı, aynı görünüm. Aynı sistemden aynı sisteme taşıyanlar en derine iner, çünkü iki uç da aynı yolları ve ayarları paylaşır; AnySync sistemler arasında geçer; WavySync de Wave Terminal'i her yerde aynı tutar.</p>
+    <div class="fam">
+      <a class="fm" href="https://macysync.vercel.app/" style="--fa:#4c9dff;--fbg:#0a0e14;--fe:#2a3749"><svg viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path class="fb" d="M0 44 C 80 44 100 16 160 16 S 240 40 300 40"/><path class="fr" style="animation-delay:-0.0s" d="M0 44 C 80 44 100 16 160 16 S 240 40 300 40"/></svg><span class="fk">MYSY</span><b>Macy<i>~</i>Sync</b><span class="fl">Mac'ten Mac'e</span></a>
+      <a class="fm here" href="https://windysync.vercel.app/" style="--fa:#67e8f9;--fbg:#0b1517;--fe:#1d3a40"><svg viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path class="fb" d="M0 42 H 232 C 266 42 274 16 254 10 C 238 6 226 22 240 30"/><path class="fr" style="animation-delay:-0.0s" d="M0 42 H 232 C 266 42 274 16 254 10 C 238 6 226 22 240 30"/><path class="fb" d="M40 24 H 170 C 186 24 190 12 180 10"/><path class="fr" style="animation-delay:-1.3s" d="M40 24 H 170 C 186 24 190 12 180 10"/></svg><span class="fk">WYSY</span><b>Windy<i>~</i>Sync</b><span class="fl">Windows'tan Windows'a</span><span class="fh">buradasın</span></a>
+      <a class="fm" href="https://linysync.vercel.app/" style="--fa:#fbbf24;--fbg:#14120e;--fe:#3a3122"><svg viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path class="fb" d="M0 46 H 70 V 30 H 160 V 46 H 214 V 16 H 300"/><path class="fr" style="animation-delay:-0.0s" d="M0 46 H 70 V 30 H 160 V 46 H 214 V 16 H 300"/><path class="fb" d="M30 20 H 120 V 8 H 190"/><path class="fr" style="animation-delay:-1.3s" d="M30 20 H 120 V 8 H 190"/></svg><span class="fk">LYSY</span><b>Liny<i>~</i>Sync</b><span class="fl">Linux'tan Linux'a, her dağıtım</span></a>
+      <a class="fm" href="https://anysync.vercel.app/" style="--fa:#d946ef;--fbg:#120f1c;--fe:#2e2547"><svg viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path class="fb" d="M0 46 C 90 46 110 14 150 30 S 230 14 300 14"/><path class="fr" style="animation-delay:-0.0s" d="M0 46 C 90 46 110 14 150 30 S 230 14 300 14"/><path class="fb" d="M0 14 C 90 14 110 46 150 30 S 230 46 300 46"/><path class="fr" style="animation-delay:-1.3s" d="M0 14 C 90 14 110 46 150 30 S 230 46 300 46"/></svg><span class="fk">NYSYN</span><b>Any<i>~</i>Sync</b><span class="fl">macOS, Windows ve Linux arasında</span></a>
+      <a class="fm" href="https://wavysync.vercel.app/" style="--fa:#ff3355;--fbg:#120d19;--fe:#3a2d4f"><svg viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path class="fb" d="M0 30 C 25 10 50 10 75 30 S 125 50 150 30 S 200 10 225 30 S 275 50 300 30"/><path class="fr" style="animation-delay:-0.0s" d="M0 30 C 25 10 50 10 75 30 S 125 50 150 30 S 200 10 225 30 S 275 50 300 30"/></svg><span class="fk">WYSY</span><b>Wavy<i>~</i>Sync</b><span class="fl">Wave Terminal, her bilgisayarda aynı</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <span class="caps">İndir</span>
+    <h2><em>Windy~Sync</em>'i indir.</h2>
+    <div class="dl">
+      <a class="os" href="https://github.com/Ege-BULUT/WindySync/releases/latest/download/windysync-windows-x64.exe"><b>Windows</b><span>x64 · Windows 10 ve 11</span><i>.exe ↓</i></a>
+    </div>
+    <p class="note">Tek bir <code>.exe</code>: pencere ve komut satırı bir arada. Girişi yapılmış GitHub CLI ister (<code>gh auth login</code>). İlk sürüm henüz çıkmadı; çıkınca bu düğme onu indirir.</p>
+    <a class="more" href="download/">İndirme sayfası →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>WindySync · MIT · Ege BULUT</span>
+    <span>Microsoft ile bağlantısı yoktur. Windows, Microsoft Corporation'ın ticari markasıdır.</span>
+  </div>
+</footer>
+
+<script src="../site.js"></script>
+</body>
+</html>

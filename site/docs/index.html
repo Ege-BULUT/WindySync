@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs: how to move a Windows PC to a new PC with WindySync</title>
+<meta name="description" content="What WindySync needs, the first run, connecting two PCs, picking and moving, where things land, the brief for your agent, security and the command line.">
+<link rel="canonical" href="https://windysync.vercel.app/docs/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WindySync">
+<meta property="og:url" content="https://windysync.vercel.app/docs/">
+<meta property="og:title" content="Docs: how to move a Windows PC to a new PC with WindySync">
+<meta property="og:description" content="What WindySync needs, the first run, connecting two PCs, picking and moving, where things land, the brief for your agent, security and the command line.">
+<meta property="og:image" content="https://windysync.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Docs: how to move a Windows PC to a new PC with WindySync">
+<meta name="twitter:description" content="What WindySync needs, the first run, connecting two PCs, picking and moving, where things land, the brief for your agent, security and the command line.">
+<meta name="twitter:image" content="https://windysync.vercel.app/og.png">
+<meta name="theme-color" content="#0b1517">
+<link rel="alternate" hreflang="en" href="https://windysync.vercel.app/docs/">
+<link rel="alternate" hreflang="tr" href="https://windysync.vercel.app/tr/docs/">
+<link rel="alternate" hreflang="x-default" href="https://windysync.vercel.app/docs/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1517'/%3E%3Cpath d='M5 13H20C25 13 26 7 22 6.5C19 6 18 10 21 10.5' fill='none' stroke='%2367e8f9' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M5 21H25' stroke='%23ecfeff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../"><span>Windy<b>~</b>Sync</span> <small>WYSY</small></a>
+    <div class="links">
+      <a href="../#how" class="opt">How it works</a>
+      <a href="../features/">Features</a>
+      <a href="../docs/" class="on">Docs</a>
+      <a href="../changelog/" class="opt">Changelog</a>
+      <a href="../#family" class="opt">Family</a>
+      <a href="../download/">Download</a>
+    </div>
+    <a class="btn lang" id="lang" href="../tr/docs/" hreflang="tr" aria-label="Türkçe">TR</a>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="wrap">
+    <span class="caps">Docs</span>
+    <h1>How <em>Windy~Sync</em> works</h1>
+    <p class="sub">From the first run to the brief your agent finishes.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap doc">
+    <aside class="toc"><div class="toc-list"><a href="#status">Status</a><a href="#need">What you need</a><a href="#first">First run</a><a href="#connect">Connect</a><a href="#move">Pick and move</a><a href="#land">Where things land</a><a href="#brief">The brief</a><a href="#security">Security</a><a href="#cli">Command line</a></div></aside>
+    <div class="prose">
+<h2 id="status">Status</h2>
+<p>WindySync is in early development and not released yet. It runs AnySync's engine with Windows on both ends: only Windows PCs are listed and accepted. Working today: device identity and looks, the bus repo, the item catalogue, offers and picks, the encrypted PC to PC stream with resume, placing and the brief, in the window and on the command line. CI tests and builds it on Windows, and a tagged version makes a release with <code>windysync-windows-x64.exe</code>.</p>
+<h2 id="need">What you need</h2>
+<ul><li>Two Windows PCs running WindySync (Windows 10 or 11).</li><li>One GitHub account, signed in with the GitHub CLI (<code>gh auth login</code>) on both, or a token in <code>WINDYSYNC_TOKEN</code>.</li><li>The two PCs on the same network, so they can reach each other directly.</li><li>For the last step, any AI agent you like to read GOAL.md.</li></ul>
+<h2 id="first">First run</h2>
+<p>WindySync gives the device a random eight digit id and keeps it, the name, the look and a key pair in its own folder: <code>%APPDATA%\windysync</code>. On first use it makes your private bus repo, <code>&lt;login&gt;/windysync-bus</code>, and registers the PC there with its public key.</p>
+<h2 id="connect">Connect</h2>
+<p>On the Connect tab, press Find devices on this account and pick the other PC. Choose to send or to receive; the other device shows the request, and its owner approves or declines. The direction holds for this transfer only.</p>
+<h2 id="move">Pick and move</h2>
+<p>The sender offers a tree of what it has, grouped by kind. Each item shows where it lands on the new PC. Tick what you want; only those travel, straight between the two devices. Folders rebuilt from source (<code>node_modules</code>, <code>target</code>, <code>.venv</code>, <code>__pycache__</code> and the like) stay behind. If the connection drops, the receiver asks again for what has not arrived, up to 20 times.</p>
+<h2 id="land">Where things land</h2>
+<p>Every item has a logical id, like <code>editors/vscode</code>, and its paths under Windows' own folders: <code>%APPDATA%</code>, <code>%LOCALAPPDATA%</code>, <code>%USERPROFILE%</code>. The sender packs each item under its id; the receiver unpacks into a staging folder and moves each part to the same place under its own user, whatever that user is called. Whatever was there is kept next to it as <code>&lt;name&gt;.before-windysync</code>. Each transfer gets a folder at <code>%USERPROFILE%\WindySync\&lt;transfer&gt;</code>, with the lists in <code>lists/</code>.</p>
+<h2 id="brief">The brief</h2>
+<p>When everything is in place, the receiver writes <code>GOAL.md</code> into the transfer folder: every item, where it landed, any problems, a note on what is left to do for each, and, when the user folder has another name, which paths to rewrite. Hand it to the agent you use, for example:</p>
+<pre><code>cd $HOME\WindySync\&lt;transfer&gt;; claude "Read GOAL.md in this folder and do what it says."</code></pre>
+<p>The lists are in <code>lists\</code>: <code>winget import -i lists\winget.txt</code> brings back what winget installed. Done means every item works, or is in <code>TODO-FOR-YOU.md</code> with steps.</p>
+<h2 id="security">Security</h2>
+<p>The small things on GitHub (the offer, the picks, the stream key) are sealed boxes to the other device's public key (X25519, XSalsa20-Poly1305). Files go as an XChaCha20-Poly1305 stream under a random key only the two devices know; every frame is authenticated, so a wrong key gets nothing and a cut stream fails instead of ending early.</p>
+<h2 id="cli">Command line</h2>
+<pre><code>windysync                               open the window
+windysync --scan                        what this device could send
+windysync --give &lt;id&gt; [--only a,b]      ask device &lt;id&gt; to receive, then send
+windysync --accept [--only a,b]         approve the request waiting here, then do this side
+windysync --id                          this device's id, name and look</code></pre>
+<p><code>--only</code> takes item ids or their starts, as <code>--scan</code> lists them; without it the receiver takes everything offered. A device that doesn't run Windows is refused.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>WindySync · MIT · Ege BULUT</span>
+    <span>Not affiliated with Microsoft. Windows is a trademark of Microsoft Corporation.</span>
+  </div>
+</footer>
+
+<script src="../site.js"></script>
+</body>
+</html>

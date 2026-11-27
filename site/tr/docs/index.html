@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Belgeler: WindySync ile bir Windows PC yeni bir PC'ye nasıl taşınır</title>
+<meta name="description" content="WindySync'in neye ihtiyacı olduğu, ilk açılış, iki PC'yi bağlama, seçme ve taşıma, her şeyin nereye indiği, ajan için not, güvenlik ve komut satırı.">
+<link rel="canonical" href="https://windysync.vercel.app/tr/docs/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WindySync">
+<meta property="og:url" content="https://windysync.vercel.app/tr/docs/">
+<meta property="og:title" content="Belgeler: WindySync ile bir Windows PC yeni bir PC'ye nasıl taşınır">
+<meta property="og:description" content="WindySync'in neye ihtiyacı olduğu, ilk açılış, iki PC'yi bağlama, seçme ve taşıma, her şeyin nereye indiği, ajan için not, güvenlik ve komut satırı.">
+<meta property="og:image" content="https://windysync.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Belgeler: WindySync ile bir Windows PC yeni bir PC'ye nasıl taşınır">
+<meta name="twitter:description" content="WindySync'in neye ihtiyacı olduğu, ilk açılış, iki PC'yi bağlama, seçme ve taşıma, her şeyin nereye indiği, ajan için not, güvenlik ve komut satırı.">
+<meta name="twitter:image" content="https://windysync.vercel.app/og.png">
+<meta name="theme-color" content="#0b1517">
+<link rel="alternate" hreflang="en" href="https://windysync.vercel.app/docs/">
+<link rel="alternate" hreflang="tr" href="https://windysync.vercel.app/tr/docs/">
+<link rel="alternate" hreflang="x-default" href="https://windysync.vercel.app/docs/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1517'/%3E%3Cpath d='M5 13H20C25 13 26 7 22 6.5C19 6 18 10 21 10.5' fill='none' stroke='%2367e8f9' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M5 21H25' stroke='%23ecfeff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../../site.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../"><span>Windy<b>~</b>Sync</span> <small>WYSY</small></a>
+    <div class="links">
+      <a href="../#how" class="opt">Nasıl çalışır</a>
+      <a href="../features/">Özellikler</a>
+      <a href="../docs/" class="on">Belgeler</a>
+      <a href="../changelog/" class="opt">Değişiklikler</a>
+      <a href="../#family" class="opt">Aile</a>
+      <a href="../download/">İndir</a>
+    </div>
+    <a class="btn lang" id="lang" href="../../docs/" hreflang="en" aria-label="English">EN</a>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="wrap">
+    <span class="caps">Belgeler</span>
+    <h1><em>Windy~Sync</em> nasıl çalışır</h1>
+    <p class="sub">İlk açılıştan ajanının bitirdiği nota kadar.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap doc">
+    <aside class="toc"><div class="toc-list"><a href="#status">Durum</a><a href="#need">Ne gerekir</a><a href="#first">İlk açılış</a><a href="#connect">Bağlan</a><a href="#move">Seç ve taşı</a><a href="#land">Nereye iner</a><a href="#brief">Not</a><a href="#security">Güvenlik</a><a href="#cli">Komut satırı</a></div></aside>
+    <div class="prose">
+<h2 id="status">Durum</h2>
+<p>WindySync erken geliştirme aşamasında, henüz yayınlanmadı. AnySync'in motorunu iki uçta da Windows ile çalıştırır: yalnızca Windows PC'ler listelenir ve kabul edilir. Bugün çalışanlar: cihaz kimliği ve görünümleri, bus deposu, öğe kataloğu, teklifler ve seçimler, kaldığı yerden süren şifreli PC'den PC'ye akış, yerleştirme ve not; pencerede de komut satırında da. CI onu Windows'ta test edip derliyor; etiketlenen bir sürüm <code>windysync-windows-x64.exe</code> ile bir yayın oluşturur.</p>
+<h2 id="need">Ne gerekir</h2>
+<ul><li>WindySync çalışan iki Windows PC (Windows 10 ya da 11).</li><li>İkisinde de GitHub CLI ile girişi yapılmış (<code>gh auth login</code>) tek bir GitHub hesabı, ya da <code>WINDYSYNC_TOKEN</code> içinde bir token.</li><li>Birbirine doğrudan ulaşabilmeleri için aynı ağda iki PC.</li><li>Son adım için GOAL.md'yi okuyacak, sevdiğin herhangi bir yapay zekâ ajanı.</li></ul>
+<h2 id="first">İlk açılış</h2>
+<p>WindySync cihaza rastgele sekiz haneli bir kimlik verir; bunu, adı, görünümü ve bir anahtar çiftini kendi klasöründe tutar: <code>%APPDATA%\windysync</code>. İlk kullanımda özel bus deponu, <code>&lt;kullanıcı&gt;/windysync-bus</code>, oluşturur ve PC'yi açık anahtarıyla oraya kaydeder.</p>
+<h2 id="connect">Bağlan</h2>
+<p>Bağlan sekmesinde Bu hesaptaki cihazları bul'a bas ve diğer PC'yi seç. Göndermeyi ya da almayı seç; diğer cihaz isteği gösterir, sahibi onaylar ya da reddeder. Yön yalnızca bu aktarım için geçerlidir.</p>
+<h2 id="move">Seç ve taşı</h2>
+<p>Gönderen elindekini türlere göre gruplanmış bir ağaç olarak sunar. Her öğe yeni PC'de nereye ineceğini gösterir. İstediklerini işaretle; yalnızca onlar gider, iki cihaz arasında doğrudan. Kaynaktan yeniden kurulan klasörler (<code>node_modules</code>, <code>target</code>, <code>.venv</code>, <code>__pycache__</code> ve benzerleri) geride kalır. Bağlantı koparsa alan taraf gelmeyenleri 20 kereye kadar yeniden ister.</p>
+<h2 id="land">Nereye iner</h2>
+<p>Her öğenin <code>editors/vscode</code> gibi mantıksal bir kimliği ve Windows'un kendi klasörleri altında yolları vardır: <code>%APPDATA%</code>, <code>%LOCALAPPDATA%</code>, <code>%USERPROFILE%</code>. Gönderen her öğeyi kimliğinin altında paketler; alan taraf bunu bir hazırlık klasörüne açar ve her parçayı kendi kullanıcısının altında aynı yere taşır, o kullanıcının adı ne olursa olsun. Orada olan ne varsa yanında <code>&lt;ad&gt;.before-windysync</code> olarak saklanır. Her aktarımın <code>%USERPROFILE%\WindySync\&lt;aktarım&gt;</code> altında bir klasörü olur; listeler <code>lists/</code> içindedir.</p>
+<h2 id="brief">Not</h2>
+<p>Her şey yerine indiğinde alan taraf aktarım klasörüne <code>GOAL.md</code> yazar: her öğe, nereye indiği, varsa sorunlar, her biri için geriye kalan iş ve kullanıcı klasörünün başka bir adı varsa hangi yolların değişeceği. Bunu kullandığın ajana ver, örneğin:</p>
+<pre><code>cd $HOME\WindySync\&lt;aktarım&gt;; claude "Bu klasördeki GOAL.md'yi oku ve söylediğini yap."</code></pre>
+<p>Listeler <code>lists\</code> içindedir: <code>winget import -i lists\winget.txt</code> winget'in kurduklarını geri getirir. İş, her öğe çalıştığında ya da adımlarıyla <code>TODO-FOR-YOU.md</code>'ye yazıldığında biter.</p>
+<h2 id="security">Güvenlik</h2>
+<p>GitHub'daki küçük şeyler (teklif, seçimler, akış anahtarı) diğer cihazın açık anahtarına mühürlü kutulardır (X25519, XSalsa20-Poly1305). Dosyalar yalnızca iki cihazın bildiği rastgele bir anahtarla XChaCha20-Poly1305 akışı olarak gider; her parça doğrulanır, yanlış anahtar hiçbir şey alamaz ve kopan bir akış erken bitmiş sayılmaz, hata verir.</p>
+<h2 id="cli">Komut satırı</h2>
+<pre><code>windysync                               pencereyi açar
+windysync --scan                        bu cihazın gönderebilecekleri
+windysync --give &lt;id&gt; [--only a,b]      &lt;id&gt; cihazından almasını ister, sonra gönderir
+windysync --accept [--only a,b]         burada bekleyen isteği onaylar, sonra bu tarafı yapar
+windysync --id                          bu cihazın kimliği, adı ve görünümü</code></pre>
+<p><code>--only</code>, <code>--scan</code>'in listelediği öğe kimliklerini ya da başlangıçlarını alır; olmadan alan taraf sunulan her şeyi alır. Windows çalıştırmayan bir cihaz reddedilir.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>WindySync · MIT · Ege BULUT</span>
+    <span>Microsoft ile bağlantısı yoktur. Windows, Microsoft Corporation'ın ticari markasıdır.</span>
+  </div>
+</footer>
+
+<script src="../../site.js"></script>
+</body>
+</html>

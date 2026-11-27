@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Özellikler: gönder ya da al, seç, taşı ve bitir · WindySync</title>
+<meta name="description" content="Diğer Windows PC'yi seç, onayla, yenisinin alacaklarını işaretle, uçtan uca şifreli taşı ve kalanını GOAL.md ile yapay zekâ ajanına bırak.">
+<link rel="canonical" href="https://windysync.vercel.app/tr/features/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WindySync">
+<meta property="og:url" content="https://windysync.vercel.app/tr/features/">
+<meta property="og:title" content="Özellikler: gönder ya da al, seç, taşı ve bitir · WindySync">
+<meta property="og:description" content="Diğer Windows PC'yi seç, onayla, yenisinin alacaklarını işaretle, uçtan uca şifreli taşı ve kalanını GOAL.md ile yapay zekâ ajanına bırak.">
+<meta property="og:image" content="https://windysync.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="tr_TR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Özellikler: gönder ya da al, seç, taşı ve bitir · WindySync">
+<meta name="twitter:description" content="Diğer Windows PC'yi seç, onayla, yenisinin alacaklarını işaretle, uçtan uca şifreli taşı ve kalanını GOAL.md ile yapay zekâ ajanına bırak.">
+<meta name="twitter:image" content="https://windysync.vercel.app/og.png">
+<meta name="theme-color" content="#0b1517">
+<link rel="alternate" hreflang="en" href="https://windysync.vercel.app/features/">
+<link rel="alternate" hreflang="tr" href="https://windysync.vercel.app/tr/features/">
+<link rel="alternate" hreflang="x-default" href="https://windysync.vercel.app/features/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1517'/%3E%3Cpath d='M5 13H20C25 13 26 7 22 6.5C19 6 18 10 21 10.5' fill='none' stroke='%2367e8f9' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M5 21H25' stroke='%23ecfeff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../../site.css">
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="../"><span>Windy<b>~</b>Sync</span> <small>WYSY</small></a>
+    <div class="links">
+      <a href="../#how" class="opt">Nasıl çalışır</a>
+      <a href="../features/" class="on">Özellikler</a>
+      <a href="../docs/">Belgeler</a>
+      <a href="../changelog/" class="opt">Değişiklikler</a>
+      <a href="../#family" class="opt">Aile</a>
+      <a href="../download/">İndir</a>
+    </div>
+    <a class="btn lang" id="lang" href="../../features/" hreflang="en" aria-label="English">EN</a>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="wrap">
+    <span class="caps">Özellikler</span>
+    <h1><em>Windy~Sync</em> neler yapar</h1>
+    <p class="sub">İki PC'de de çalışan ve yenisini eskisi gibi hissettiren küçük bir Rust uygulaması.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="frow reveal">
+      <div><span class="caps">DEVICE</span><h3>Her PC kendini çizer</h3><p>Cihaz sekmesinde bu PC'yi adlandırır ve nasıl çizileceğini seçersin: bir masaüstü monitörü ya da bir laptop; grafit, siyah, gümüş ya da beyaz. Çizimlerin hepsi özgün şekiller; şirket logosu yok.</p></div>
+      <img src="../../device.png" width="2560" height="1560" alt="Her PC kendini çizer" loading="lazy">
+    </div>
+    <div class="frow reveal">
+      <div><span class="caps">CONNECT</span><h3>Hesabındaki PC'ler</h3><p>Bu hesaptaki cihazları bul, bus deponda kayıtlı her Windows PC'yi listeler. Birini seç, göndermeyi ya da almayı seç; diğer PC sahibinin onaylayacağı ya da reddedeceği bir istek gösterir.</p></div>
+      <img src="../../find.png" width="2560" height="1560" alt="Hesabındaki PC'ler" loading="lazy">
+    </div>
+    <div class="frow reveal">
+      <div><span class="caps">PICK</span><h3>İşaretlediğin bir ağaç</h3><p>Gönderen elindekini tarar. Alan taraf bunu türlere göre gruplanmış bir ağaç olarak, her öğenin nereye ineceğiyle birlikte görür; bir grubu işaretlemek içindeki her şeyi işaretler.</p></div>
+      <img src="../../pick.png" width="2560" height="1560" alt="İşaretlediğin bir ağaç" loading="lazy">
+    </div>
+    <div class="frow reveal">
+      <div><span class="caps">MOVE</span><h3>Doğrudan, ve kaldığı yerden sürer</h3><p>Yalnızca seçilenler gider; ağın üzerinden PC'den PC'ye, doğrulanmış bir XChaCha20-Poly1305 akışıyla. Bir dakika hiç bayt gelmezse bağlantı kopmuş sayılır ve alan taraf gelmeyenleri yeniden ister.</p></div>
+      <img src="../../sending.png" width="2560" height="1560" alt="Doğrudan, ve kaldığı yerden sürer" loading="lazy">
+    </div>
+    <div class="frow reveal">
+      <div><span class="caps">BRIEF</span><h3>Ajanının iş yapabileceği bir not</h3><p>Her öğe yeni PC'de Windows'un onu tuttuğu yere iner; orada olan <code>.before-windysync</code> olarak saklanır. Sonra alan taraf GOAL.md'yi yazar: neyin nereye indiği, sorunlar, değişecek yollar ve kurulum için winget, Scoop, npm, cargo ve pipx listeleri.</p></div>
+      <img src="../../done.png" width="2560" height="1560" alt="Ajanının iş yapabileceği bir not" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <span class="caps">Katalog</span>
+    <h2>Taşımayı bildiği her şey</h2>
+    <p class="sub">Her öğe ve yeni PC'de indiği yer.</p>
+    <div class="land fit"><table>
+      <thead><tr><th>Öğe</th><th>İndiği yer</th></tr></thead>
+      <tbody>
+      <tr><td>Masaüstü, Belgeler, İndirilenler, Resimler, Müzik, Videolar</td><td><code>%USERPROFILE%\…</code>, her üst öğe ayrı</td></tr>
+      <tr><td>Git ayarı</td><td><code>%USERPROFILE%\.gitconfig</code>, <code>.gitignore_global</code></td></tr>
+      <tr><td>SSH anahtarları ve ayarı</td><td><code>%USERPROFILE%\.ssh</code></td></tr>
+      <tr><td>GnuPG</td><td><code>%APPDATA%\gnupg</code></td></tr>
+      <tr><td>PowerShell profili</td><td><code>Documents\PowerShell\Microsoft.PowerShell_profile.ps1</code></td></tr>
+      <tr><td>VS Code ve Cursor ayarları</td><td><code>%APPDATA%\Code\User</code>, <code>%APPDATA%\Cursor\User</code></td></tr>
+      <tr><td>Zed ayarları</td><td><code>%APPDATA%\Zed</code></td></tr>
+      <tr><td>Wave ayarları</td><td><code>%USERPROFILE%\.config\waveterm</code></td></tr>
+      <tr><td>Obsidian kasa listesi</td><td><code>%APPDATA%\obsidian\obsidian.json</code></td></tr>
+      <tr><td>Edge, Chrome, Brave ve Chromium yer imleri</td><td><code>%LOCALAPPDATA%\…\User Data\Default\Bookmarks</code></td></tr>
+      <tr><td>Claude Code ayarları, skill'ler, ajanlar, komutlar</td><td><code>%USERPROFILE%\.claude</code></td></tr>
+      <tr><td>Codex ayarı</td><td><code>%USERPROFILE%\.codex</code></td></tr>
+      </tbody></table></div>
+    <h2 style="margin-top:60px">Kurulu olanların listeleri</h2>
+    <p class="sub">Eski PC'de yapılır ve metin olarak gider; ajanın yenisinde bunlardan kurar.</p>
+    <div class="land fit"><table>
+      <thead><tr><th>Liste</th><th>Yapıldığı komut</th><th>Kurulduğu komut</th></tr></thead>
+      <tbody>
+      <tr><td>winget</td><td><code>winget export</code></td><td><code>winget import -i</code></td></tr>
+      <tr><td>Scoop</td><td><code>scoop export</code></td><td>Scoop</td></tr>
+      <tr><td>VS Code ve Cursor eklentileri</td><td><code>code --list-extensions</code></td><td><code>code --install-extension</code></td></tr>
+      <tr><td>npm, cargo, pipx</td><td><code>npm ls -g</code>, <code>cargo install --list</code>, <code>pipx list</code></td><td><code>npm install -g</code>, <code>cargo install</code>, <code>pipx install</code></td></tr>
+      </tbody></table></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>WindySync · MIT · Ege BULUT</span>
+    <span>Microsoft ile bağlantısı yoktur. Windows, Microsoft Corporation'ın ticari markasıdır.</span>
+  </div>
+</footer>
+
+<script src="../../site.js"></script>
+</body>
+</html>
