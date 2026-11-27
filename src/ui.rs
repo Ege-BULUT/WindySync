@@ -1,7 +1,7 @@
-//! The window: borderless and see-through, shaped as a gust of wind: a straight top edge that runs on past the
-//! corner and hooks down, and a straight bottom edge that trails off to a point on the left and curls up at the end,
-//! as the WYSY logo's two lines. This PC is on the left, the other on the right with its card, the panel below;
-//! the background lines run straight across like wind. While files move, they run from the sender to the receiver.
+//! The window: borderless and see-through, shaped as a gust of wind: a straight bottom edge that trails off to a
+//! point on the left and curls up at the end, as the WYSY logo's lines. This PC is on the left, the other on the
+//! right with its card, the panel below; the background lines run straight across like wind. While files move, they
+//! run from the sender to the receiver.
 //!
 //! The bus is read every 5 s on a thread. A transfer runs the command line's own `session::send` or
 //! `session::receive` on a thread of its own: it takes the person's ticks from 03 PICK and shows its progress in
@@ -644,8 +644,8 @@ fn depth(poly: &[[f32; 2]], p: [f32; 2]) -> f32 {
 const LINES: usize = 15;
 const SAMPLES: usize = 200;
 
-/// A sampled curve from one lobe to the other, and how deep inside the body each sample is (Rune has no clipping,
-/// so the lines are cut and faded by this).
+/// A sampled curve from one lobe to the other, and how deep inside the body each sample is, short of the title row
+/// (Rune has no clipping, so the lines are cut and faded by this).
 struct FlowLine {
     pts: Vec<[f32; 2]>,
     depth: Vec<f32>,
@@ -667,6 +667,11 @@ fn flow_lines() -> &'static [FlowLine] {
     static L: OnceLock<Vec<FlowLine>> = OnceLock::new();
     L.get_or_init(|| {
         let poly: Vec<[f32; 2]> = segments().into_iter().flat_map(|s| (1..=16).map(move |i| bezier(s, i as f32 / 16.0))).collect();
+        // The title row counts as outside: the lines stop short of it, so none runs through the name or the version.
+        let e = &layout().elements;
+        let clear = |p: [f32; 2]| {
+            [e.title, e.controls].iter().map(|r| (r.x - p[0]).max(p[0] - r.x - r.w).max(0.0).hypot((r.y - p[1]).max(p[1] - r.y - r.h).max(0.0)) - 10.0).fold(f32::MAX, f32::min)
+        };
         (0..LINES)
             .map(|i| {
                 let o = -1.0 + 2.0 * i as f32 / (LINES - 1) as f32;
@@ -692,7 +697,7 @@ fn flow_lines() -> &'static [FlowLine] {
                         [x, y]
                     })
                     .collect();
-                let depth: Vec<f32> = pts.iter().map(|p| depth(&poly, *p)).collect();
+                let depth: Vec<f32> = pts.iter().map(|p| depth(&poly, *p).min(clear(*p))).collect();
                 let mut inside = Vec::new();
                 let mut from = None;
                 for (j, d) in depth.iter().chain([&-1.0]).enumerate() {
@@ -736,12 +741,17 @@ fn backdrop(s: &S) -> Vec<El> {
             if b <= a + 1 {
                 continue;
             }
-            let fade = ((l.depth[a..=b].iter().copied().fold(f32::MAX, f32::min) - 2.0) / 28.0).clamp(0.0, 1.0);
+            // The glow's blur has to end inside the body: over the see-through desktop it comes out as a bright blob.
+            // Near the edge only the thin core is drawn.
+            let near = l.depth[a..=b].iter().copied().fold(f32::MAX, f32::min);
+            let (fade, glow_fade) = (((near - 6.0) / 20.0).clamp(0.0, 1.0), ((near - 26.0) / 24.0).clamp(0.0, 1.0));
             if fade == 0.0 {
                 continue;
             }
             let pts = l.pts[a..=b].to_vec();
-            glow = glow.stroke(pts.clone(), 7.0, Color { a: (0.16 + 0.5 * env) * fade, ..tint });
+            if glow_fade > 0.0 {
+                glow = glow.stroke(pts.clone(), 7.0, Color { a: (0.16 + 0.5 * env) * glow_fade, ..tint });
+            }
             core = core.stroke(pts, 1.6, Color { a: (0.36 + 0.55 * env) * fade, ..tint });
         }
     }
