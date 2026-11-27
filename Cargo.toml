@@ -1,10 +1,10 @@
 [package]
-name = "anysync"
+name = "windysync"
 version = "0.1.0"
 edition = "2024"
 license = "MIT"
-description = "Move your working setup between macOS, Windows and Linux: one side offers, the other picks, an AI agent sets it up."
-repository = "https://github.com/Ege-BULUT/AnySync"
+description = "Move your working setup from one Windows PC to another: one side offers, the other picks, an AI agent sets it up."
+repository = "https://github.com/Ege-BULUT/WindySync"
 
 [dependencies]
 rune = { git = "https://github.com/anomalyco/rune", rev = "beffc254ef86adc59c090018ebb958dfc7990789", default-features = false, features = ["accessibility", "embedded-fonts", "metal-backend", "svg", "tooling"] }

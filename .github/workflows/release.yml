@@ -1,0 +1,39 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release --locked --target x86_64-pc-windows-msvc
+      - name: Package
+        shell: bash
+        run: |
+          mkdir dist
+          cp target/x86_64-pc-windows-msvc/release/windysync.exe dist/windysync-windows-x64.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windysync-windows-x64
+          path: dist/*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes

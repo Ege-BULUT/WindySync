@@ -1,7 +1,6 @@
-# AnySync design
+# WindySync design
 
-AnySync moves a computer's working setup to another computer, whichever of macOS, Windows and Linux each one
-runs. It is the cross-platform member of a family:
+WindySync moves a Windows PC's working setup to another Windows PC. It is the Windows member of a family:
 
 | App | Moves | Short name |
 |-|-|-|
@@ -10,18 +9,18 @@ runs. It is the cross-platform member of a family:
 | LinySync | Linux to Linux | LYSY |
 | AnySync | any of them to any of them | NYSYN |
 
-The native ones go deep, because both ends share the same paths, preferences system and keychain: MacySync copies
-app bundles, `defaults` domains, the login keychain and the apps' keychain keys. AnySync takes what still means
-something on the other system, and says plainly what it leaves behind.
+WindySync is AnySync with one system: `look::SYSTEMS` holds only Windows, so the window lists and draws only Windows
+devices and the command line refuses a device of another system. The rest of this document is AnySync's design,
+which WindySync shares; where it speaks of other systems, both ends here run Windows.
 
 ## What stays the same as MacySync
 
-- **The bus.** A private GitHub repository of the person's (`<login>/anysync-bus`) carries device records, requests,
+- **The bus.** A private GitHub repository of the person's (`<login>/windysync-bus`) carries device records, requests,
   offers and live progress. GitHub is the control plane only; no file content goes there.
 - **Sealed documents.** Offers, picks and the stream key are crypto_box sealed boxes for the other device's key,
   stored as base64 text.
 - **The stream.** Files go device to device over TCP, as tar inside an XChaCha20-Poly1305 stream, on the LAN or
-  through AnySync's own userspace Tailscale node (its own state dir, socket and SOCKS5 port, never touching a
+  through WindySync's own userspace Tailscale node (its own state dir, socket and SOCKS5 port, never touching a
   Tailscale already installed).
 - **The flow.** One side offers a tree, the other picks, only the picks travel, and an AI agent finishes the setup
   from a brief (AGENTS.md and GOAL.md) on the receiving side.
@@ -34,7 +33,7 @@ MacySync tars paths relative to `/` and maps the old home onto the new one. That
 `~/Library/Application Support/Code/User` on a Mac is `%APPDATA%\Code\User` on Windows and `~/.config/Code/User`
 on Linux.
 
-So every AnySync item has a **logical id** and, per system, the **real paths** it lives at:
+So every WindySync item has a **logical id** and, per system, the **real paths** it lives at:
 
 ```
 apps/vscode/settings   mac:   ~/Library/Application Support/Code/User/{settings.json,keybindings.json,snippets}
@@ -77,11 +76,9 @@ right; the lines run from sender to receiver.
 
 ## Plan
 
-1. CLI first: `anysync --scan`, `--give <id>`, `--accept`, on all three systems, with the logical item model and a
-   catalogue of the items above. Tests cover the path mapping per system and a round trip over localhost.
-2. Builds for macOS, Windows and Linux in CI.
-3. The window (Rune, like MacySync): pick tree, move tab, device looks per system.
-4. Site at anysync.vercel.app.
+1. AnySync's engine and window, Windows only, with its own palette, logo and window shape.
+2. The Windows build in CI, and a release with it attached.
+3. Site at windysync.vercel.app.
 
 ## Risks
 

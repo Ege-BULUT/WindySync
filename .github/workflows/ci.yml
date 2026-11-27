@@ -6,27 +6,17 @@ on:
 
 jobs:
   test:
-    strategy:
-      fail-fast: false
-      matrix:
-        # macOS is tested where it is built; its runners cost ten times the minutes.
-        os: [windows-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
+    # WindySync is Windows only.
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
-      # The window (Rune, through winit) links against these on Linux.
-      - name: Linux packages
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libwayland-dev
       - run: cargo test --locked
       - run: cargo build --release --locked
       - uses: actions/upload-artifact@v4
         with:
-          name: anysync-${{ runner.os }}
-          path: |
-            target/release/anysync
-            target/release/anysync.exe
+          name: windysync-Windows
+          path: target/release/windysync.exe
           if-no-files-found: error
           retention-days: 14

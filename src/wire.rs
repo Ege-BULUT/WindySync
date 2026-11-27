@@ -303,7 +303,7 @@ fn list_name(item: &Item) -> String {
 }
 
 /// Moves an unpacked item from staging to this device's own place for each slot; what was there is renamed to
-/// `<name>.before-anysync`. Returns (placed paths, problems).
+/// `<name>.before-windysync`. Returns (placed paths, problems).
 pub fn place(item: &Item, staging: &Path, here: &Env) -> (Vec<String>, Vec<String>) {
     let (mut placed, mut problems) = (vec![], vec![]);
     if !item.run.is_empty() {
@@ -324,7 +324,7 @@ pub fn place(item: &Item, staging: &Path, here: &Env) -> (Vec<String>, Vec<Strin
         let Some(src) = std::fs::read_dir(&slot).ok().and_then(|mut d| d.next()).and_then(Result::ok).map(|e| e.path()) else { continue };
         let dst = PathBuf::from(dst);
         if std::fs::symlink_metadata(&dst).is_ok() {
-            let aside = PathBuf::from(format!("{}.before-anysync", dst.display()));
+            let aside = PathBuf::from(format!("{}.before-windysync", dst.display()));
             let _ = std::fs::remove_dir_all(&aside);
             let _ = std::fs::remove_file(&aside);
             if let Err(e) = std::fs::rename(&dst, &aside) {
@@ -351,7 +351,7 @@ mod tests {
     /// lands at Linux's own path, node_modules stays behind in the person's folder, and a wrong key gets nothing.
     #[test]
     fn a_mac_item_crosses_to_linux_paths() {
-        let base = std::env::temp_dir().join(format!("anysync-wire-{}", std::process::id()));
+        let base = std::env::temp_dir().join(format!("windysync-wire-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&base);
         let (a, b) = (base.join("mac"), base.join("linux"));
         let user = a.join("Library/Application Support/Code/User");
@@ -395,7 +395,7 @@ mod tests {
         let lu = b.join(".config/Code/User");
         assert_eq!(std::fs::read(lu.join("settings.json")).unwrap(), b"{\"editor.fontSize\": 14}");
         assert!(lu.join("snippets/rust.json").exists());
-        assert_eq!(std::fs::read(lu.join("settings.json.before-anysync")).unwrap(), b"{}", "what was there is kept aside");
+        assert_eq!(std::fs::read(lu.join("settings.json.before-windysync")).unwrap(), b"{}", "what was there is kept aside");
         place(&proj, &staging, &linux);
         assert!(b.join("Documents/proj/main.rs").exists());
         assert!(!b.join("Documents/proj/node_modules").exists(), "rebuildable folders stay behind");

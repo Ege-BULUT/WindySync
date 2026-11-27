@@ -9,14 +9,14 @@ mod session;
 mod ui;
 mod wire;
 
-const HELP: &str = "AnySync: move your setup between macOS, Windows and Linux
+const HELP: &str = "WindySync: move your setup from one Windows PC to another
 
-  anysync                               open the window
-  anysync --scan                        what this device could send
-  anysync --give <id> [--only a,b]      ask device <id> to receive, then send
-  anysync --accept [--only a,b]         approve the request waiting here, then do this side
-  anysync --id                          this device's id, name and look
-  anysync --snap out.png [--scene s]    render the window on made-up devices, headless (--list-scenes)";
+  windysync                               open the window
+  windysync --scan                        what this device could send
+  windysync --give <id> [--only a,b]      ask device <id> to receive, then send
+  windysync --accept [--only a,b]         approve the request waiting here, then do this side
+  windysync --id                          this device's id, name and look
+  windysync --snap out.png [--scene s]    render the window on made-up devices, headless (--list-scenes)";
 
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
@@ -57,7 +57,7 @@ fn main() {
         _ => Err(format!("unknown option {first}\n\n{HELP}")),
     };
     if let Err(e) = r {
-        eprintln!("anysync: {e}");
+        eprintln!("windysync: {e}");
         std::process::exit(1);
     }
 }

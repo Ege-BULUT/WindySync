@@ -117,9 +117,9 @@ pub fn update_session(b: &Bus, transfer: &str, f: impl FnOnce(&mut Session)) -> 
     b.put_json(&path, &s, Some(&sha), &format!("session {}", s.state)).map(|_| ())
 }
 
-/// The receiver's folder for one transfer: `~/AnySync/<transfer>`.
+/// The receiver's folder for one transfer: `~/WindySync/<transfer>`.
 pub fn local_dir(env: &Env, transfer: &str) -> PathBuf {
-    PathBuf::from(env.resolve("~/AnySync").unwrap_or_default()).join(transfer.trim_start_matches("transfers/"))
+    PathBuf::from(env.resolve("~/WindySync").unwrap_or_default()).join(transfer.trim_start_matches("transfers/"))
 }
 
 /// GOAL.md for the agent finishing the setup: what landed where, what didn't, and what to rewrite.
@@ -152,12 +152,12 @@ pub fn brief(offer: &Offer, here: &Env, from: &str, placed: &[(Item, Vec<String>
 /// (for npm globals and Claude Code plugin hooks, which run `node`): with brew when it is here, else nodejs.org's
 /// LTS into ~/.local/node, no sudo. It only installs what is missing, and exits 1 when something is still missing.
 const PREFLIGHT: &str = r#"#!/bin/sh
-# Written by AnySync. Installs what the moved items need before the agent starts; safe to run again.
+# Written by WindySync. Installs what the moved items need before the agent starts; safe to run again.
 NEED_BREW=__BREW__
 NEED_NODE=__NODE__
 BREWS=${PREFLIGHT_BREWS-"/opt/homebrew/bin/brew /usr/local/bin/brew"}
 ok=1
-say() { printf '\033[1m[AnySync]\033[0m %s\n' "$1"; }
+say() { printf '\033[1m[WindySync]\033[0m %s\n' "$1"; }
 find_brew() { for b in $BREWS; do [ -x "$b" ] && { echo "$b"; return; }; done; }
 add_line() { grep -qsF "$1" "$HOME/.zprofile" || { printf '\n%s\n' "$1" >> "$HOME/.zprofile"; say "Added to ~/.zprofile: $1"; }; }
 # Node's LTS from nodejs.org into ~/.local/node, checked against its SHASUMS256, linked into ~/.local/bin. No sudo.
@@ -351,7 +351,7 @@ mod tests {
 
     #[test]
     fn preflight_only_for_items_that_need_tools() {
-        let dir = std::env::temp_dir().join(format!("anysync-preflight-{}", std::process::id()));
+        let dir = std::env::temp_dir().join(format!("windysync-preflight-{}", std::process::id()));
         std::fs::create_dir_all(dir.join("lists")).unwrap();
         assert!(preflight(&["dev/git", "files/documents"], &dir).is_none());
         let s = preflight(&["ai/claude-code"], &dir).unwrap();
@@ -393,7 +393,7 @@ mod tests {
     /// one through a folder in place of GitHub and a stream over this machine, both telling their progress.
     #[test]
     fn send_and_receive_meet_through_the_bus() {
-        let base = std::env::temp_dir().join(format!("anysync-session-{}", std::process::id()));
+        let base = std::env::temp_dir().join(format!("windysync-session-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&base);
         let (a, b) = (base.join("mac"), base.join("linux"));
         std::fs::create_dir_all(a.join("Documents/proj")).unwrap();

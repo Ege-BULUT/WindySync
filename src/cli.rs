@@ -1,9 +1,9 @@
 //! A transfer from the command line, on any of the three systems:
 //!
-//!   anysync --give <device id> [--only a,b]    ask that device to receive, then send
-//!   anysync --accept [--only a,b]              approve the request waiting here, then do this side
+//!   windysync --give <device id> [--only a,b]    ask that device to receive, then send
+//!   windysync --accept [--only a,b]              approve the request waiting here, then do this side
 //!
-//! `--only` takes item ids or their starts (`anysync --scan` lists them); without it the receiver takes everything
+//! `--only` takes item ids or their starts (`windysync --scan` lists them); without it the receiver takes everything
 //! that has a place on its system.
 
 use std::cell::RefCell;
@@ -22,9 +22,9 @@ struct Ctx {
 
 fn connect() -> Result<Ctx, String> {
     let mut cfg = Config::load();
-    let token = me::token().ok_or("Not signed in: run `gh auth login`, or set ANYSYNC_TOKEN.")?;
+    let token = me::token().ok_or("Not signed in: run `gh auth login`, or set WINDYSYNC_TOKEN.")?;
     if cfg.bus.is_empty() {
-        cfg.bus = format!("{}/anysync-bus", bus::github_login(&token)?);
+        cfg.bus = format!("{}/windysync-bus", bus::github_login(&token)?);
         bus::ensure_repo(&token, &cfg.bus)?;
         cfg.save();
     }
@@ -39,7 +39,11 @@ fn connect() -> Result<Ctx, String> {
 }
 
 fn device(b: &Bus, id: &str) -> Result<Device, String> {
-    b.get_json::<Device>(&format!("devices/{id}.json"))?.map(|d| d.0).ok_or(format!("no device #{id} on the bus"))
+    let d = b.get_json::<Device>(&format!("devices/{id}.json"))?.map(|d| d.0).ok_or(format!("no device #{id} on the bus"))?;
+    if !crate::look::ours(&d) {
+        return Err(format!("#{id} runs {}, which this app doesn't move to or from", if d.os.is_empty() { &d.look.os } else { &d.os }));
+    }
+    Ok(d)
 }
 
 /// Prints each step once; while files move, a line per item rather than per few bytes.

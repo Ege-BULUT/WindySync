@@ -1,4 +1,4 @@
-//! The three systems AnySync moves between, and where each keeps a person's things. Paths are written as templates
+//! The three systems the *ySync apps know, and where each keeps a person's things. Paths are written as templates
 //! (`~/…`, `%APPDATA%\…`, `$XDG_CONFIG_HOME/…`) and resolved for one system at a time, from its home folder and
 //! environment, so the mapping can be checked for all three on any of them.
 

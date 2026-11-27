@@ -1,5 +1,5 @@
-//! This device: its id, name, look and key pair, kept in AnySync's own folder (`~/.config/anysync`, on Windows
-//! `%APPDATA%\anysync`; ANYSYNC_HOME overrides), and the GitHub token the bus uses.
+//! This device: its id, name, look and key pair, kept in WindySync's own folder (`~/.config/windysync`, on Windows
+//! `%APPDATA%\windysync`; WINDYSYNC_HOME overrides), and the GitHub token the bus uses.
 
 use std::fs;
 use std::path::PathBuf;
@@ -11,11 +11,11 @@ use crate::os::{Env, Os};
 use crate::seal;
 
 pub fn dir() -> PathBuf {
-    if let Some(d) = std::env::var_os("ANYSYNC_HOME") {
+    if let Some(d) = std::env::var_os("WINDYSYNC_HOME") {
         return PathBuf::from(d);
     }
     let env = Env::here();
-    let t = if env.os == Os::Windows { "%APPDATA%/anysync" } else { "~/.config/anysync" };
+    let t = if env.os == Os::Windows { "%APPDATA%/windysync" } else { "~/.config/windysync" };
     PathBuf::from(env.resolve(t).unwrap_or_default())
 }
 
@@ -126,9 +126,9 @@ pub fn device(cfg: &Config) -> crate::bus::Device {
         seen: crate::bus::now(), version: env!("CARGO_PKG_VERSION").into(), ..Default::default() }
 }
 
-/// ANYSYNC_TOKEN, else the GitHub CLI's.
+/// WINDYSYNC_TOKEN, else the GitHub CLI's.
 pub fn token() -> Option<String> {
-    if let Ok(t) = std::env::var("ANYSYNC_TOKEN") {
+    if let Ok(t) = std::env::var("WINDYSYNC_TOKEN") {
         return Some(t).filter(|t| !t.is_empty());
     }
     let home = Env::here().home;

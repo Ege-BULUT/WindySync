@@ -1,7 +1,6 @@
-//! Device looks for all three systems. A Mac laptop is drawn from its real model and colour
-//! (assets/catalog/macbooks.json, from MacySync); a Windows or Linux device, and a Mac desktop, is a PC laptop or a
-//! desktop monitor in a chassis colour; a Linux one carries its distro's name as a text badge under the screen.
-//! Every drawing is an original vector shape: no company artwork or logo.
+//! Device looks. The look code knows all three systems (it is AnySync's), but SYSTEMS holds only Windows here, so
+//! every device is a PC laptop or a desktop monitor in a chassis colour. Every drawing is an original vector shape:
+//! no company artwork or logo.
 
 use std::sync::OnceLock;
 
@@ -84,12 +83,17 @@ pub fn short_name(m: &Model) -> String {
 // What the picker offers -----------------------------------------------------------------------------------
 
 /// (look.os, shown as)
-pub const SYSTEMS: [(&str, &str); 3] = [("mac", "macOS"), ("windows", "Windows"), ("linux", "Linux")];
+pub const SYSTEMS: &[(&str, &str)] = &[("windows", "Windows")];
 pub const KINDS: [&str; 2] = ["laptop", "desktop"];
 /// Chassis colours of a PC laptop, a monitor or a Mac desktop.
 pub const CHASSIS: [(&str, &str); 4] = [("Graphite", "#3b3e45"), ("Black", "#17181b"), ("Silver", "#b9bdc4"), ("White", "#e4e4e8")];
 /// os-release ids, shown as they are.
 pub const DISTROS: [&str; 10] = ["ubuntu", "fedora", "debian", "arch", "linuxmint", "pop", "opensuse-tumbleweed", "manjaro", "nixos", "elementary"];
+
+/// Whether `d` runs one of the systems in SYSTEMS, by what it reports or else by its look.
+pub fn ours(d: &crate::bus::Device) -> bool {
+    Os::parse(&d.os).or(Os::parse(&d.look.os)).is_some_and(|o| SYSTEMS.iter().any(|s| s.0 == os_key(o)))
+}
 
 /// The look's system key for `os`.
 pub fn os_key(os: Os) -> &'static str {
@@ -129,11 +133,12 @@ pub fn models(look: &Look) -> Vec<(String, String)> {
 /// model the system has, and one of its colours. A change in the picker goes through here, so switching
 /// systems always lands on a look that can be drawn.
 pub fn fix(look: &Look) -> Look {
-    let os = if SYSTEMS.iter().any(|s| s.0 == look.os) { look.os.clone() } else { os_key(Os::current()).into() };
+    let known = |o: &str| SYSTEMS.iter().any(|s| s.0 == o);
+    let os = [look.os.as_str(), os_key(Os::current())].into_iter().find(|o| known(o)).unwrap_or(SYSTEMS[0].0).to_string();
     let kind = if KINDS.contains(&look.kind.as_str()) { look.kind.clone() } else { "laptop".into() };
     let model = match (os.as_str(), kind.as_str()) {
         ("mac", "laptop") => mac_model(&look.model).id.clone(),
-        ("linux", _) if !look.model.is_empty() => look.model.clone(),
+        ("linux", _) if look.os == "linux" && !look.model.is_empty() => look.model.clone(),
         ("linux", _) => DISTROS[0].into(),
         _ => String::new(),
     };
@@ -178,6 +183,9 @@ fn lit(body: Color, t: f32) -> Color {
 }
 
 const BLACK: Color = Color { r: 0.004, g: 0.004, b: 0.005, a: 1.0 };
+/// The app's tint: a screen's glow from one corner to the other, and a Linux badge's text.
+const SCREEN: [Color; 3] = [Color { r: 0.004, g: 0.028, b: 0.036, a: 1.0 }, Color { r: 0.0015, g: 0.008, b: 0.011, a: 1.0 }, Color { r: 0.008, g: 0.048, b: 0.062, a: 1.0 }];
+const BADGE_TEXT: Color = Color { r: 0.55, g: 0.68, b: 0.7, a: 1.0 };
 const WHITE: Color = Color { r: 1.0, g: 1.0, b: 1.0, a: 1.0 };
 
 pub const W: f32 = 1280.0;
@@ -230,7 +238,7 @@ fn badge(key: &str, name: &str, chin: [f32; 4]) -> El {
     let w = name.chars().count() as f32 * size * 0.62 + size * 1.4;
     el().key(format!("{key}-badge")).absolute(chin[0] + (chin[2] - w) / 2.0, chin[1] + (chin[3] - size * 1.4) / 2.0).size(w, size * 1.4).radius(size)
         .fill(Color { a: 0.09, ..WHITE }).center()
-        .child(text(name.to_string()).font(TextStyle::new(size, 600.0).mono()).color(Color { r: 0.62, g: 0.6, b: 0.7, a: 1.0 }))
+        .child(text(name.to_string()).font(TextStyle::new(size, 600.0).mono()).color(BADGE_TEXT))
 }
 
 /// A desktop monitor on a stand in the box a laptop takes: the panel where the lid would be, the foot near where
@@ -261,7 +269,7 @@ fn monitor(key: &str, body: Color, x: f32, y: f32, w: f32) -> Drawn {
 
 fn display(key: &str, s: [f32; 4], w: f32) -> El {
     el().key(format!("{key}-display")).absolute(s[0], s[1]).size(s[2], s[3]).radius(w * 0.012)
-        .linear_gradient(2.4, [(0.0, Color { r: 0.02, g: 0.012, b: 0.06, a: 1.0 }), (0.55, Color { r: 0.008, g: 0.004, b: 0.022, a: 1.0 }), (1.0, Color { r: 0.04, g: 0.02, b: 0.09, a: 1.0 })])
+        .linear_gradient(2.4, [(0.0, SCREEN[0]), (0.55, SCREEN[1]), (1.0, SCREEN[2])])
 }
 
 /// An open laptop seen from the front and a little above, its hinge centred on (`cx`, `hinge_y`). `width` is a
@@ -358,35 +366,17 @@ mod tests {
     }
 
     #[test]
-    fn the_picker_always_lands_on_a_look_it_can_draw() {
-        assert!(catalog().len() > 30, "the MacBook catalogue loads");
-        // A Mac reports an identifier; the look keeps the catalogue's id and the model's own colours.
-        let m1 = fix(&look("mac", "laptop", "MacBookPro17,1", ""));
-        assert_eq!(mac_model(&m1.model).model_identifiers, ["MacBookPro17,1"]);
-        assert_eq!(m1.color, mac_model(&m1.model).colors[0].name);
-        assert!(colours(&m1).iter().all(|c| mac_model(&m1.model).colors.iter().any(|m| m.name == c.0)));
-        // A Mac switched to Windows: no model, and a chassis colour; a Mac colour carries over only when it is one.
-        assert_eq!(fix(&Look { os: "windows".into(), color: "Midnight".into(), ..m1.clone() }), look("windows", "laptop", "", "Graphite"));
-        assert_eq!(fix(&Look { os: "windows".into(), color: "Silver".into(), ..m1.clone() }).color, "Silver");
+    fn every_look_is_a_windows_one() {
+        // A look from another system, or nonsense, becomes a Windows one in a chassis colour.
+        assert_eq!(fix(&look("mac", "laptop", "MacBookPro17,1", "Midnight")), look("windows", "laptop", "", "Graphite"));
+        assert_eq!(fix(&look("linux", "desktop", "ubuntu", "Silver")), look("windows", "desktop", "", "Silver"));
+        assert_eq!(fix(&look("beos", "tower", "", "")), look("windows", "laptop", "", "Graphite"));
         assert_eq!(fix(&look("windows", "desktop", "", "Black")), look("windows", "desktop", "", "Black"));
-        // Linux keeps its distro, even one the list doesn't have, and the list then shows it first.
-        assert_eq!(fix(&look("linux", "desktop", "", "Silver")), look("linux", "desktop", "ubuntu", "Silver"));
-        let gentoo = look("linux", "laptop", "gentoo", "Graphite");
-        assert_eq!(fix(&gentoo), gentoo);
-        assert_eq!(models(&gentoo)[0].0, "gentoo");
-        assert_eq!(models(&gentoo).len(), DISTROS.len() + 1);
         assert!(models(&look("windows", "laptop", "", "")).is_empty());
-        assert_eq!(models(&m1).len(), catalog().len());
-        // A Mac desktop is a silver monitor unless the person picks another colour.
-        assert_eq!(fix(&look("mac", "desktop", "Mac14,3", "")), look("mac", "desktop", "", "Silver"));
-        // Nonsense becomes this system's laptop.
-        assert_eq!(fix(&look("beos", "tower", "", "")).os, os_key(Os::current()));
-        assert_eq!(fix(&look("beos", "tower", "", "")).kind, "laptop");
-        // The system buttons: a Mac model never becomes a distro, and Linux to Linux keeps the distro.
-        assert_eq!(with_os(&m1, "linux").model, "ubuntu");
-        assert_eq!(with_os(&gentoo, "linux"), gentoo);
-        assert_eq!(with_os(&with_os(&m1, "windows"), "mac").model, catalog()[0].id);
-        assert_eq!(describe(&look("linux", "laptop", "fedora", "")), "Linux laptop · fedora");
         assert_eq!(describe(&look("windows", "desktop", "", "")), "Windows desktop");
+        // Only Windows devices are listed or accepted.
+        let d = |os: &str| crate::bus::Device { os: os.into(), ..Default::default() };
+        assert!(ours(&d("Windows")));
+        assert!(!ours(&d("macOS")) && !ours(&d("Linux")) && !ours(&d("")));
     }
 }

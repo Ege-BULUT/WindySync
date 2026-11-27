@@ -1,4 +1,4 @@
-//! What AnySync knows how to move, by logical id, with each part's place on each system. A part is one slot: the
+//! What WindySync knows how to move, by logical id, with each part's place on each system. A part is one slot: the
 //! sender's path in slot i lands at the receiver's path in slot i. A system with no place for an item has an empty
 //! list, and the item isn't offered to it.
 
@@ -196,7 +196,10 @@ pub fn on_path(prog: &str) -> bool {
 
 /// A list's text: what the command printed (or wrote to `{out}`), and why it failed when it did.
 pub fn run_list(run: &[String]) -> Vec<u8> {
-    let out = std::env::temp_dir().join(format!("anysync-list-{}.txt", std::process::id()));
+    // One file per call: tests run lists side by side in one process.
+    static N: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+    let n = N.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    let out = std::env::temp_dir().join(format!("windysync-list-{}-{n}.txt", std::process::id()));
     let args: Vec<String> = run[1..].iter().map(|a| a.replace("{out}", &out.display().to_string())).collect();
     // `code` and `npm` are .cmd scripts on Windows, which only cmd runs.
     let mut cmd = if cfg!(windows) { let mut c = std::process::Command::new("cmd"); c.arg("/C").arg(&run[0]); c } else { std::process::Command::new(&run[0]) };
@@ -249,7 +252,7 @@ mod tests {
         assert_eq!(run_list(&own(&["sh", "-c", "echo hi > \"$0\"", "{out}"])), b"hi\n");
         let failed = String::from_utf8(run_list(&own(&["sh", "-c", "echo part; echo why >&2; exit 3"]))).unwrap();
         assert!(failed.starts_with("part\n") && failed.contains("why"), "{failed}");
-        assert!(String::from_utf8(run_list(&own(&["no-such-tool-anysync"]))).unwrap().starts_with("# couldn't run"));
+        assert!(String::from_utf8(run_list(&own(&["no-such-tool-windysync"]))).unwrap().starts_with("# couldn't run"));
     }
 
     #[test]

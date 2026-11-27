@@ -52,7 +52,7 @@ impl Bus {
     fn get_value(&self, path: &str) -> Result<Option<Value>, String> {
         let url = format!("{API}/repos/{}/contents/{path}", self.repo);
         let etag = self.cache.lock().unwrap().get(path).map(|c| c.0.clone());
-        let mut req = agent().get(&url).header("Authorization", &format!("Bearer {}", self.token)).header("User-Agent", "AnySync");
+        let mut req = agent().get(&url).header("Authorization", &format!("Bearer {}", self.token)).header("User-Agent", "WindySync");
         if let Some(e) = &etag {
             req = req.header("If-None-Match", e);
         }
@@ -80,7 +80,7 @@ impl Bus {
         // Over 1 MB the contents API leaves `content` empty; the raw media type still gives the bytes.
         if v["encoding"].as_str() == Some("none") && v["size"].as_u64().unwrap_or(0) > 0 {
             let url = format!("{API}/repos/{}/contents/{path}", self.repo);
-            let res = agent().get(&url).header("Authorization", &format!("Bearer {}", self.token)).header("User-Agent", "AnySync")
+            let res = agent().get(&url).header("Authorization", &format!("Bearer {}", self.token)).header("User-Agent", "WindySync")
                 .header("Accept", "application/vnd.github.raw+json").call().map_err(|e| e.to_string())?;
             if res.status().as_u16() >= 300 {
                 return Err(format!("GitHub {} on {path}", res.status().as_u16()));
@@ -128,7 +128,7 @@ impl Bus {
                 body["sha"] = json!(s);
             }
             let url = format!("{API}/repos/{}/contents/{path}", self.repo);
-            let res = agent().put(&url).header("Authorization", &format!("Bearer {}", self.token)).header("User-Agent", "AnySync").send_json(body).map_err(|e| e.to_string())?;
+            let res = agent().put(&url).header("Authorization", &format!("Bearer {}", self.token)).header("User-Agent", "WindySync").send_json(body).map_err(|e| e.to_string())?;
             let status = res.status().as_u16();
             let v: Value = res.into_body().read_json().unwrap_or_default();
             self.cache.lock().unwrap().remove(path);
@@ -150,7 +150,7 @@ impl Bus {
 }
 
 pub fn github_login(token: &str) -> Result<String, String> {
-    let res = ureq::get("https://api.github.com/user").header("Authorization", &format!("Bearer {token}")).header("User-Agent", "AnySync").call().map_err(|e| format!("GitHub: {e}"))?;
+    let res = ureq::get("https://api.github.com/user").header("Authorization", &format!("Bearer {token}")).header("User-Agent", "WindySync").call().map_err(|e| format!("GitHub: {e}"))?;
     let v: serde_json::Value = res.into_body().read_json().map_err(|e| e.to_string())?;
     v["login"].as_str().map(String::from).ok_or("GitHub didn't say who this token belongs to".into())
 }
@@ -159,13 +159,13 @@ pub fn github_login(token: &str) -> Result<String, String> {
 pub fn ensure_repo(token: &str, repo: &str) -> Result<(), String> {
     let agent: ureq::Agent = ureq::Agent::config_builder().http_status_as_error(false).build().into();
     let auth = format!("Bearer {token}");
-    let res = agent.get(&format!("https://api.github.com/repos/{repo}")).header("Authorization", &auth).header("User-Agent", "AnySync").call().map_err(|e| e.to_string())?;
+    let res = agent.get(&format!("https://api.github.com/repos/{repo}")).header("Authorization", &auth).header("User-Agent", "WindySync").call().map_err(|e| e.to_string())?;
     match res.status().as_u16() {
         200 => Ok(()),
         404 => {
             let name = repo.rsplit('/').next().unwrap_or(repo);
-            let body = serde_json::json!({ "name": name, "private": true, "auto_init": true, "description": "AnySync's device and transfer bus (written by the app)." });
-            let r = agent.post("https://api.github.com/user/repos").header("Authorization", &auth).header("User-Agent", "AnySync").send_json(body).map_err(|e| e.to_string())?;
+            let body = serde_json::json!({ "name": name, "private": true, "auto_init": true, "description": "WindySync's device and transfer bus (written by the app)." });
+            let r = agent.post("https://api.github.com/user/repos").header("Authorization", &auth).header("User-Agent", "WindySync").send_json(body).map_err(|e| e.to_string())?;
             if r.status().as_u16() < 300 { Ok(()) } else { Err(format!("Couldn't create {repo}: GitHub {}", r.status().as_u16())) }
         }
         s => Err(format!("GitHub {s} for {repo}")),
