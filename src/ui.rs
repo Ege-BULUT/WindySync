@@ -1289,7 +1289,8 @@ fn incoming(s: &S, r: &Request) -> El {
         Ask::Receive => ("Send this setup?", format!("{who} wants to take this device's settings, keys and files. You pick what to offer before anything moves.")),
     };
     let card = col().w_full().fill(FIELD).border(1.0, DEEP).radius(16.0).padding(22.0).gap(12.0)
-        .shadow(30.0, 80.0, Color { r: 0.0, g: 0.0, b: 0.0, a: 0.6 })
+        // A tight shadow: the window is see-through, and a wide one would show past concave edges.
+        .shadow(10.0, 28.0, Color { r: 0.0, g: 0.0, b: 0.0, a: 0.6 })
         .child(caps("REQUEST", ACCENT))
         .child(label(title, 19.0, 700.0, INK))
         .child(label(body, 13.5, 500.0, SOFT).wrap().w_full())
