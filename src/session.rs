@@ -359,8 +359,11 @@ mod tests {
         std::fs::write(dir.join("lists/brew.txt"), "brew \"node\"\n").unwrap();
         let s = preflight(&["tools/brew"], &dir).unwrap();
         assert!(s.contains("NEED_BREW=1") && s.contains("NEED_NODE=1"), "a Brewfile with node needs Node too");
-        std::fs::write(dir.join("preflight.sh"), s).unwrap();
-        assert!(std::process::Command::new("/bin/sh").arg("-n").arg(dir.join("preflight.sh")).status().unwrap().success(), "valid sh");
+        // The script runs on a Mac receiver; its syntax is checked wherever there is a /bin/sh.
+        if cfg!(unix) {
+            std::fs::write(dir.join("preflight.sh"), s).unwrap();
+            assert!(std::process::Command::new("/bin/sh").arg("-n").arg(dir.join("preflight.sh")).status().unwrap().success(), "valid sh");
+        }
         let _ = std::fs::remove_dir_all(dir);
     }
 
